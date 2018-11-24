@@ -1,5 +1,4 @@
 class NetworkEdge {
-
   private int id;
 
   private Node start; 
