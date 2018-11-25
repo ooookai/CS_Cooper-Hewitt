@@ -5,7 +5,6 @@ public final String RESIDENTIAL = "R";
 public final String OFFICE = "O";
 public final String AMENITY = "A";
 
-
 public class Agent {
 
   // Networks is a mapping from network name to RoadNetwork.
@@ -13,8 +12,8 @@ public class Agent {
   private HashMap<String, RoadNetwork> networks;
   private HashMap<String, PImage[]> glyphsMap;
   private RoadNetwork map;  // Curent network used for mobility type.
+  private NetworkEdge edge; // Current NetworkEdge
   private int worldId;  // 1=Bad world; 2=Good world
-
 
   private int residentialBlockId;
   private int officeBlockId;
@@ -161,7 +160,8 @@ public class Agent {
     ArrayList<Node> newPath = map.graph.aStar(srcNode, destNode);
     if ( newPath != null ) {
       path = newPath;
-      toNode = path.get(path.size() - 2); // what happens if there are only two nodes?
+      toNode = path.get(path.size() - 2); 
+      edge = map.edgeManager.updateEdge(edge, srcNode, toNode);
     }
   }
 
@@ -357,6 +357,8 @@ public class Agent {
         // Not destination. Look for next node.
         srcNode = toNode;
         toNode = path.get(path.indexOf(toNode) - 1);
+        // change myEdge 
+        edge = map.edgeManager.updateEdge(edge, srcNode, toNode);
       }
     } else {
       // Not arrived to node

@@ -3,6 +3,7 @@ import ai.pathfinder.*;
 public class RoadNetwork {
   private PVector size;
   private PVector[] bounds;  // [0] Left-Top  [1] Right-Bottom
+  private NetworkEdgeManager edgeManager;
   private Pathfinder graph;
   private String type;
   private int worldId;
@@ -17,6 +18,7 @@ public class RoadNetwork {
   RoadNetwork(String GeoJSONfile, String _type, int _worldId) {
 
     ArrayList<Node> nodes = new ArrayList<Node>();
+    NetworkEdgeManager edgeManager = new NetworkEdgeManager();
     
     // Load file -->
     JSONObject JSON = loadJSONObject(GeoJSONfile);
@@ -37,7 +39,7 @@ public class RoadNetwork {
       
       JSONArray points = JSONlines.getJSONObject(i).getJSONObject("geometry").getJSONArray("coordinates");
 
-      for(int j = 0; j<points.size(); j++) {
+      for(int j = 0; j < points.size(); j++) {
            // Point coordinates to XY screen position -->
         PVector pos = toXY(points.getJSONArray(j).getFloat(0), points.getJSONArray(j).getFloat(1));
         
@@ -47,6 +49,7 @@ public class RoadNetwork {
         if(existingNode != null){
           if(j > 0){
             prevNode.connect(existingNode);
+            edgeManager.add(prevNode, existingNode, !oneWay);
             if(!oneWay){
               existingNode.connect(prevNode);
             }
@@ -54,7 +57,9 @@ public class RoadNetwork {
           prevNode = existingNode;
         } else {
           Node newNode = new Node(pos.x, pos.y);
+          edgeManager.mapNode(newNode);
           if(j > 0){
+            edgeManager.add(prevNode, newNode, !oneWay);
             if(!oneWay){
               prevNode.connectBoth(newNode);
             } else {
@@ -72,12 +77,13 @@ public class RoadNetwork {
   }
 
    // RETURN EXISTING NODE (SAME COORDINATES) IF EXISTS -->
-  private Node nodeExists(float x, float y, ArrayList<Node> nodes) {
-    for(Node node : nodes) {
+  private Node nodeExists(float x, float y, ArrayList<Node> _nodes) {
+    for(Node node: _nodes) {
       if(node.x == x && node.y == y) {
         return node;
       }
     }
+
     return null;
   }
   
