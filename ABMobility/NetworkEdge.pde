@@ -1,6 +1,5 @@
 class NetworkEdge {
   private int id;
-
   private Node start; 
   private Node end;
   private boolean isBidirectional;
@@ -84,9 +83,7 @@ class NetworkEdgeManager {
     NetworkEdge newEdge = idsToEdge.get(nodesToIds(newSrc, newDest));
     // TODO(Yasushi Sakai): what if null??
     newEdge.agents.add(agent);
-
     newEdge.isVisible = true;
-
     return newEdge;
   }
 
@@ -96,7 +93,6 @@ class NetworkEdgeManager {
     int idB = nodeToIndex.get(b);
     return idA + "-" + idB; 
   }
-
   public void draw(PGraphics p){
     for(NetworkEdge e: edges){
       e.draw(p);

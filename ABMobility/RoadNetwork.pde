@@ -18,7 +18,7 @@ public class RoadNetwork {
 
     ArrayList<Node> nodes = new ArrayList<Node>();
     edgeManager = new NetworkEdgeManager();
-
+    NetworkEdgeManager edgeManager = new NetworkEdgeManager();
     // Load file -->
     JSONObject JSON = loadJSONObject(GeoJSONfile);
     JSONArray JSONlines = JSON.getJSONArray("features");

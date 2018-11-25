@@ -13,7 +13,7 @@ public class Agent {
   private HashMap<String, PImage[]> glyphsMap;
   private RoadNetwork map;  // Curent network used for mobility type.
   private NetworkEdge edge; // Current NetworkEdge
-  private int worldId;  // 1 = Bad world; 2 = Good world
+  private int worldId;  // 1=Bad world; 2=Good world
 
   private int residentialBlockId;
   private int officeBlockId;
