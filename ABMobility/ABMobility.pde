@@ -29,6 +29,7 @@ boolean showCollisionPotential = false;
 boolean inAnimationMode = false;
 boolean enableAnimationMode = true;
 UDPReceiver udpR;
+boolean devMode = false;
 
 void settings(){
   fullScreen(P3D, SPAN);
@@ -46,6 +47,10 @@ void setup(){
 void draw(){
   drawScene();
   //println(frameRate);
+  if(!devMode){
+    drawer.ks.load();
+  }
+  
 }
 
 /* Draw ------------------------------------------------------ */
