@@ -183,8 +183,7 @@ public class Agent {
 
 
   public void draw(PGraphics p, boolean glyphs) {
-    
-    if(worldId == 1){
+    if(worldId==1){
       myColor = universe.colorMapBad.get(mobilityType);
     }else{
       myColor=universe.colorMapGood.get(mobilityType);
@@ -192,8 +191,7 @@ public class Agent {
 
     p.fill(myColor);
     if(inAnimationMode && enableAnimationMode){
-      if(residentialBlockId == universe.grid.currentBlockAnimated || officeBlockId ==  universe.grid.currentBlockAnimated || amenityBlockId == universe.grid.currentBlockAnimated){
-        
+      if(residentialBlockId == universe.grid.currentBlockAnimated || officeBlockId ==  universe.grid.currentBlockAnimated || amenityBlockId == universe.grid.currentBlockAnimated){    
         if(universe.grid.gridAnimation.get(universe.grid.currentGridAnimated).center.x < state.slider * SIMULATION_WIDTH){
           p.fill(#FF0000);
           p.stroke(#FF0000);
@@ -202,7 +200,6 @@ public class Agent {
           p.stroke(#FFFFFF);
         }
         p.ellipse(pos.x, pos.y, 10*SCALE, 10*SCALE);
-        //p.stroke(##FFFFF);
         p.strokeWeight(1);
         p.line(pos.x, pos.y, universe.grid.gridAnimation.get(universe.grid.currentGridAnimated).center.x, universe.grid.gridAnimation.get(universe.grid.currentGridAnimated).center.y);
         p.noStroke();
@@ -360,15 +357,11 @@ public class Agent {
       } else {
         // Not destination. Look for next node.
         srcNode = toNode;
-<<<<<<< 469d929b79e1aaa875ca188e6a5d2cc825d84816
-        toNode = path.get(path.indexOf(toNode) - 1);
+        pathIndex -= 1;
+        toNode = path.get(pathIndex);
         if(worldId == 1){
           edge = map.updateEdge(this, edge, srcNode, toNode);
         }
-=======
-        pathIndex -= 1;
-        toNode = path.get(pathIndex);
->>>>>>> avoid traversing entire agent path for each agent update
       }
     } else {
       // Not arrived to node
