@@ -13,7 +13,7 @@ public class Agent {
   private HashMap<String, PImage[]> glyphsMap;
   private RoadNetwork map;  // Curent network used for mobility type.
   private NetworkEdge edge; // Current NetworkEdge
-  private int worldId;  // 1=Bad world; 2=Good world
+  private int worldId;  // 1 = Bad world; 2 = Good world
 
   private int residentialBlockId;
   private int officeBlockId;
@@ -45,10 +45,10 @@ public class Agent {
   private Node srcNode, destNode, toNode;  // toNode is like next node
   private ArrayList<Node> path;
   private PVector dir;
+  private float maxSpeed;
   private float speed;
   private boolean isZombie;
   private color myColor;
-
 
   Agent(HashMap<String, RoadNetwork> _networks, HashMap<String, PImage[]> _glyphsMap, int _worldId,
         int _residentialBlockId, int _officeBlockId, int _amenityBlockId,
@@ -145,7 +145,6 @@ public class Agent {
     }
   }
 
-
   private void calcRoute() {
     pos = new PVector(srcNode.x, srcNode.y);
     path = null;
@@ -156,15 +155,17 @@ public class Agent {
       toNode = destNode;
       return;
     }
+
     // Next node is available
     ArrayList<Node> newPath = map.graph.aStar(srcNode, destNode);
     if ( newPath != null ) {
       path = newPath;
       toNode = path.get(path.size() - 2); 
-      edge = map.edgeManager.updateEdge(edge, srcNode, toNode);
+      if(worldId == 1){
+        edge = map.edgeManager.updateEdge(this, edge, srcNode, toNode);
+      }
     }
   }
-
 
   public int getBlockIdByType(String type) {
     int blockId = 0;
@@ -181,11 +182,12 @@ public class Agent {
 
   public void draw(PGraphics p, boolean glyphs) {
     
-    if(worldId==1){
+    if(worldId == 1){
       myColor = universe.colorMapBad.get(mobilityType);
     }else{
       myColor=universe.colorMapGood.get(mobilityType);
     }
+
     p.fill(myColor);
     if(inAnimationMode && enableAnimationMode){
       if(residentialBlockId == universe.grid.currentBlockAnimated || officeBlockId ==  universe.grid.currentBlockAnimated || amenityBlockId == universe.grid.currentBlockAnimated){
@@ -227,9 +229,9 @@ public class Agent {
               p.fill(#CC0000);
               p.ellipse(pos.x, pos.y, 10*SCALE, 10*SCALE);
        }
-      
+
        if(showCollisionPotential) {
-         if(worldId==2){
+         if(worldId == 2){
            for (Agent a: universe.world2.agents){
              float dist = pos.dist(a.pos);
              if (dist<40) {
@@ -315,15 +317,15 @@ public class Agent {
 
     switch(mobilityType) {
       case "car" :
-        speed = SCALE*1.4+ random(-SCALE*0.6,SCALE*0.6);
+        maxSpeed = SCALE*1.4+ random(-SCALE*0.6,SCALE*0.6);
       break;
       case "bike" :
-        speed = SCALE*0.6+ random(-0.3*SCALE,0.3*SCALE);
+        maxSpeed = SCALE*0.6+ random(-0.3*SCALE,0.3*SCALE);
       break;
       case "ped" :
-        speed = SCALE*0.4 + random(-0.1*SCALE,0.1*SCALE);
+        maxSpeed = SCALE*0.4 + random(-0.1*SCALE,0.1*SCALE);
       break;
-      default:
+        default:
       break;
     }     
   }
@@ -346,7 +348,7 @@ public class Agent {
     PVector toNodePos = new PVector(toNode.x, toNode.y);
     PVector destNodePos = new PVector(destNode.x, destNode.y);
     dir = PVector.sub(toNodePos, pos);  // unnormalized direction to go
-    
+    updateSpeed(); // dynamic speed change is turned off now
     if (dir.mag() <= dir.normalize().mult(speed).mag()) {
       // Arrived to node
       if (path.indexOf(toNode) == 0) {  
@@ -357,12 +359,26 @@ public class Agent {
         // Not destination. Look for next node.
         srcNode = toNode;
         toNode = path.get(path.indexOf(toNode) - 1);
-        // change myEdge 
-        edge = map.edgeManager.updateEdge(edge, srcNode, toNode);
+        if(worldId == 1){
+          edge = map.updateEdge(this, edge, srcNode, toNode);
+        }
       }
     } else {
       // Not arrived to node
       pos.add(dir);
     }
+  }
+
+  void updateSpeed(){
+    // I've tried changing the speed dynamically,
+    // but I thought it is better to think about this 
+    // after we have collision avoidance...
+    speed = maxSpeed;
+    // if(edge != null){
+    //   int agentCount = edge.agents.size();
+    //   speed = max(maxSpeed / max(1.0, agentCount * 0.5), 0.1); 
+    // } else {
+    //   speed = maxSpeed;
+    // }
   }
 }

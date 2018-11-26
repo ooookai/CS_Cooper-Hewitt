@@ -7,6 +7,7 @@ class NetworkEdge {
   private boolean isBidirectional;
   private float length;
   private ArrayList<NetworkEdge> connections;
+  public boolean isVisible;
 
   public ArrayList<Agent> agents; 
 
@@ -17,7 +18,20 @@ class NetworkEdge {
     isBidirectional = _isBidirectional;
     length = dist(start.x, start.y, end.x, end.y);
     connections = new ArrayList<NetworkEdge>();
+    isVisible = false;
     agents = new ArrayList<Agent>();
+  }
+
+  void draw(PGraphics p){
+    if(isVisible){
+      int agentsNum = agents.size();
+      // float density = agentsNum / length;
+      float red = min(map(agentsNum, 1, 3, 0, 255), 255);
+      p.strokeWeight(10);
+      p.stroke(red, 0, 0);
+      p.strokeCap(p.SQUARE);
+      p.line(start.x, start.y, end.x, end.y);
+    }
   }
 
 }
@@ -26,20 +40,20 @@ class NetworkEdgeManager {
 
   private ArrayList<NetworkEdge> edges;
   // we need this to search Nodes in O(1)
-  private HashMap<Node, int> nodeToIndex; 
+  private HashMap<Node, Integer> nodeToIndex; 
   // a hashmap that links two Nodes to one Edge
   // "aid-bid" -> edge
-  private HashMap<String, Edge> idsToEdge;
+  private HashMap<String, NetworkEdge> idsToEdge;
 
   NetworkEdgeManager(){
     edges = new ArrayList<NetworkEdge>();
-    nodeToIndex = new HashMap<Node, int>();
-    idsToEdge = new HashMap<String, Edge>();
+    nodeToIndex = new HashMap<Node, Integer>();
+    idsToEdge = new HashMap<String, NetworkEdge>();
   }
 
   void mapNode(Node newNode){
-    if(!NodeToIndex.containsKey(newNode)){
-      int maxValue = NodeToIndex.size();
+    if(!nodeToIndex.containsKey(newNode)){
+      int maxValue = nodeToIndex.size();
       nodeToIndex.put(newNode, maxValue);  
     } 
   }
@@ -47,9 +61,9 @@ class NetworkEdgeManager {
   // creates and adds a Edge to it's edges collection.
   // also assigns the edge to a HashMap to be later accessed faster
   void add(Node start, Node end, boolean isBidirectional){
-    int id = edge.size(); 
-    Edge e = new Edge(id, start, end, isBidirectional);
-    edges.add(e)
+    int id = edges.size(); 
+    NetworkEdge e = new NetworkEdge(id, start, end, isBidirectional);
+    edges.add(e);
     String ids = nodesToIds(start, end);
     idsToEdge.put(ids, e);
     // if bidirectional, two keys 
@@ -60,16 +74,19 @@ class NetworkEdgeManager {
     }
   }
   
-  public Edge updateEdge(Agent agent, Edge oldEdge, Node newSrc, Node newDest){
+  public NetworkEdge updateEdge(Agent agent, NetworkEdge oldEdge, Node newSrc, Node newDest){
     // 1. remove agent from old edge
     if(oldEdge != null){
       oldEdge.agents.remove(agent);
+      if(oldEdge.agents.size() == 0) oldEdge.isVisible = false;
     }
 
     // 2. assignAgent to new Edge, return this edge
-    Edge newEdge = idsToEdge.get(nodesToIds(newSrc, newDest));
+    NetworkEdge newEdge = idsToEdge.get(nodesToIds(newSrc, newDest));
     // TODO(Yasushi Sakai): what if null??
     newEdge.agents.add(agent);
+
+    newEdge.isVisible = true;
 
     return newEdge;
   }
@@ -79,5 +96,11 @@ class NetworkEdgeManager {
     int idA = nodeToIndex.get(a); 
     int idB = nodeToIndex.get(b);
     return idA + "-" + idB; 
+  }
+
+  public void draw(PGraphics p){
+    for(NetworkEdge e: edges){
+      e.draw(p);
+    }  
   }
 }

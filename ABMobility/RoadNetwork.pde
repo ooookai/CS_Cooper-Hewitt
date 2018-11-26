@@ -3,7 +3,7 @@ import ai.pathfinder.*;
 public class RoadNetwork {
   private PVector size;
   private PVector[] bounds;  // [0] Left-Top  [1] Right-Bottom
-  private NetworkEdgeManager edgeManager;
+  public NetworkEdgeManager edgeManager;
   private Pathfinder graph;
   private String type;
   private int worldId;
@@ -13,13 +13,12 @@ public class RoadNetwork {
   // perimeter of the grid/world via zombie land nodes.
   private ArrayList<Node> zombieLandNodes;
 
-
   /* <--- CONSTRUCTOR ---> */
   RoadNetwork(String GeoJSONfile, String _type, int _worldId) {
 
     ArrayList<Node> nodes = new ArrayList<Node>();
-    NetworkEdgeManager edgeManager = new NetworkEdgeManager();
-    
+    edgeManager = new NetworkEdgeManager();
+
     // Load file -->
     JSONObject JSON = loadJSONObject(GeoJSONfile);
     JSONArray JSONlines = JSON.getJSONArray("features");
@@ -119,6 +118,20 @@ public class RoadNetwork {
       }
     }
   }
+
+  public NetworkEdge updateEdge(
+      Agent agent, 
+      NetworkEdge edge, 
+      Node srcNode, 
+      Node toNode) { 
+
+     return edgeManager.updateEdge(agent, edge, srcNode, toNode); 
+
+  }
+
+  public void drawEdges(PGraphics p) {
+    edgeManager.draw(p);
+  }
   
   public void draw(PGraphics p){    
     for(int i = 0; i < graph.nodes.size(); i++){
@@ -132,7 +145,6 @@ public class RoadNetwork {
           }else{
             p.stroke(universe.colorMapGood.get(type));
           }
-          
         }
         p.line(tempN.x, tempN.y, ((Connector)tempN.links.get(j)).n.x, ((Connector)tempN.links.get(j)).n.y);
       }

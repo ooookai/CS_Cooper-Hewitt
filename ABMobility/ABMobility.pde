@@ -17,7 +17,6 @@ public boolean INIT_AGENTS_FROM_DATAFILE = true;
 public final String SIMULATED_POPULATION_DATA_FILEPATH = "data/simPop.csv";
 public final int NUM_AGENTS_PER_WORLD = 1000;
 
-
 Universe universe;
 boolean showBuilding = true;
 boolean showBackground = true;

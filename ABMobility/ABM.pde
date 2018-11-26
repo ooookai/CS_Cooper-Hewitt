@@ -279,9 +279,13 @@ public class World {
     for (ABM m: models){
       m.draw(p);
     }
+
     for (Agent agent : agents) {
       agent.draw(p, showGlyphs);
     }
+
+    RoadNetwork carNetwork = networks.get("car");
+    carNetwork.drawEdges(p);
   }
 
   public void updateGraphics() {
@@ -292,16 +296,20 @@ public class World {
       pg.image(background, 0, 0, pg.width, pg.height);
     }
     
+    RoadNetwork carNetwork = networks.get("car");
+    carNetwork.drawEdges(pg);
+    
     for(ABM m: models){
       m.draw(pg);
     }
+
     for (Agent agent : agents) {
       if(showAgent){
         agent.draw(pg, showGlyphs);
       }
-      
     }
 
+    
     pg.endDraw();
   }
 
