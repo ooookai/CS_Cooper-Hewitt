@@ -13,7 +13,7 @@ public class Agent {
   private HashMap<String, PImage[]> glyphsMap;
   private RoadNetwork map;  // Curent network used for mobility type.
   private NetworkEdge edge; // Current NetworkEdge
-  private int worldId;  // 1=Bad world; 2=Good world
+  private int worldId;  // 1 = Bad world; 2 = Good world
 
   private int residentialBlockId;
   private int officeBlockId;
@@ -51,10 +51,10 @@ public class Agent {
   private boolean isZombie;
   private color myColor;
 
-  Agent(HashMap<String, RoadNetwork> _networks, HashMap<String, PImage[]> _glyphsMap, int _worldId, 
-    int _residentialBlockId, int _officeBlockId, int _amenityBlockId, 
-    String _mobilityMotif, 
-    int _householdIncome, int _occupationType, int _age) {
+  Agent(HashMap<String, RoadNetwork> _networks, HashMap<String, PImage[]> _glyphsMap, int _worldId,
+        int _residentialBlockId, int _officeBlockId, int _amenityBlockId,
+        String _mobilityMotif,
+        int _householdIncome, int _occupationType, int _age){
     networks = _networks;
     glyphsMap = _glyphsMap;
     worldId = _worldId;
@@ -162,8 +162,9 @@ public class Agent {
     ArrayList<Node> newPath = map.graph.aStar(srcNode, destNode);
     if ( newPath != null ) {
       path = newPath;
-      toNode = path.get(path.size() - 2); 
-      if(worldId == 1){
+      pathIndex = path.size() - 2; // what happens if there are only two nodes?
+      toNode = path.get(pathIndex);
+      if(workdId==1){ // congestion only showing in bad world
         edge = map.edgeManager.updateEdge(this, edge, srcNode, toNode);
       }
     }
@@ -337,16 +338,16 @@ public class Agent {
     }
 
     switch(mobilityType) {
-    case "car" :
-      speed = SCALE*1.4+ random(-SCALE*0.6, SCALE*0.6);
+      case "car" :
+        maxSpeed = SCALE*1.4+ random(-SCALE*0.6,SCALE*0.6);
       break;
-    case "bike" :
-      speed = SCALE*0.6+ random(-0.3*SCALE, 0.3*SCALE);
+      case "bike" :
+        maxSpeed = SCALE*0.6+ random(-0.3*SCALE,0.3*SCALE);
       break;
-    case "ped" :
-      speed = SCALE*0.4 + random(-0.1*SCALE, 0.1*SCALE);
+      case "ped" :
+        maxSpeed = SCALE*0.4 + random(-0.1*SCALE,0.1*SCALE);
       break;
-    default:
+        default:
       break;
     }
   }
@@ -381,7 +382,7 @@ public class Agent {
         srcNode = toNode;
         pathIndex -= 1;
         toNode = path.get(pathIndex);
-        if(worldId == 1){
+        if(worldId==1){
           edge = map.updateEdge(this, edge, srcNode, toNode);
         }
       }

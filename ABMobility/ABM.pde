@@ -307,10 +307,8 @@ public class World {
     if (showBackground) {
       pg.image(background, 0, 0, pg.width, pg.height);
     }
-    
     RoadNetwork carNetwork = networks.get("car");
     carNetwork.drawEdges(pg);
-    
     for(ABM m: models){
       m.draw(pg);
     }
