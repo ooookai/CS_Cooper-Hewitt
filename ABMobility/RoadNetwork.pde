@@ -130,7 +130,9 @@ public class RoadNetwork {
   }
 
   public void drawEdges(PGraphics p) {
-    edgeManager.draw(p);
+    p.pushStyle();
+      edgeManager.draw(p);
+    p.popStyle();
   }
   
   public void draw(PGraphics p){    
