@@ -43,7 +43,8 @@ public class Agent {
   private PImage[] glyph;
   private PVector pos;
   private Node srcNode, destNode, toNode;  // toNode is like next node
-  private ArrayList<Node> path;
+  private ArrayList<Node> path;  // Path is a list of nodes from destNode to toNode.  e.g. [destNode, node, node, ..., toNode]
+  private int pathIndex; // Keeps track of index that agent has traveled in path.  Moves from back of path to front.  i.e. destNode -> toNode
   private PVector dir;
   private float maxSpeed;
   private float speed;
@@ -153,6 +154,7 @@ public class Agent {
     if (srcNode == destNode) {
       // Agent already in destination
       toNode = destNode;
+      pathIndex = 0;
       return;
     }
 
@@ -350,18 +352,23 @@ public class Agent {
     dir = PVector.sub(toNodePos, pos);  // unnormalized direction to go
     updateSpeed(); // dynamic speed change is turned off now
     if (dir.mag() <= dir.normalize().mult(speed).mag()) {
-      // Arrived to node
-      if (path.indexOf(toNode) == 0) {  
+      // Arrived to toNode
+      if (pathIndex == 0) {  
         // Arrived to destination
         pos = destNodePos;
         this.setupNextTrip();
       } else {
         // Not destination. Look for next node.
         srcNode = toNode;
+<<<<<<< 469d929b79e1aaa875ca188e6a5d2cc825d84816
         toNode = path.get(path.indexOf(toNode) - 1);
         if(worldId == 1){
           edge = map.updateEdge(this, edge, srcNode, toNode);
         }
+=======
+        pathIndex -= 1;
+        toNode = path.get(pathIndex);
+>>>>>>> avoid traversing entire agent path for each agent update
       }
     } else {
       // Not arrived to node
