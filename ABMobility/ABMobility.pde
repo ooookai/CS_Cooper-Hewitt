@@ -29,7 +29,7 @@ boolean showCollisionPotential = false;
 boolean inAnimationMode = false;
 boolean enableAnimationMode = true;
 UDPReceiver udpR;
-boolean devMode = false;
+boolean devMode = true;
 
 void settings(){
   fullScreen(P3D, SPAN);
