@@ -199,9 +199,15 @@ public class Agent {
           p.fill(#FFFFFF);
           p.stroke(#FFFFFF);
         }
-        p.fill(myColor);
-        p.stroke(myColor);
-        p.ellipse(pos.x, pos.y, 10*SCALE, 10*SCALE);
+        PImage img = glyph[0];
+        if (img != null) {
+          p.pushMatrix();
+          p.translate(pos.x, pos.y);
+          p.rotate(dir.heading() + PI * 0.5);
+          p.translate(-1, 0);
+          p.image(img, 0, 0, img.width * SCALE, img.height * SCALE);
+          p.popMatrix();
+        }
         if(showConnectionBetweenAgentAndBuilding){
           p.stroke(myColor,100);
           p.strokeWeight(1);
@@ -209,7 +215,8 @@ public class Agent {
           p.noStroke();
         } 
       }
-    } else {  
+
+    } 
       if (pos == null || path == null) {  // in zombie land.
         return;
       }
@@ -220,7 +227,14 @@ public class Agent {
           p.translate(pos.x, pos.y);
           p.rotate(dir.heading() + PI * 0.5);
           p.translate(-1, 0);
-          p.image(img, 0, 0, img.width * SCALE, img.height * SCALE);
+          if (showRemaninginAgentAndBuilding){
+             p.tint(255,60);
+             p.image(img, 0, 0, img.width * SCALE, img.height * SCALE);
+             p.tint(255,255);
+          }else{
+            p.tint(255,255);
+            p.image(img, 0, 0, img.width * SCALE, img.height * SCALE);
+          }
           p.popMatrix();
         }
       } else {
@@ -245,7 +259,7 @@ public class Agent {
           }
         }
       }
-    }
+    
   }
 
   // DRAW AGENT PATH TO DESTINATION --->
