@@ -28,6 +28,7 @@ boolean dynamicSlider = true;
 boolean showCollisionPotential = false;
 boolean showConnectionBetweenAgentAndBuilding = false;
 boolean showRemaninginAgentAndBuilding = false;
+boolean animatedGlyph = false;
 boolean devMode = false;
 UDPReceiver udpR;
 
@@ -82,6 +83,9 @@ void keyPressed() {
     break;
   case 'g':
     showGlyphs = !showGlyphs;
+    break;
+  case 'a':
+    animatedGlyph = !animatedGlyph;
     break;
   case 'n':
     showNetwork = !showNetwork;
