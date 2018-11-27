@@ -29,9 +29,11 @@ boolean showCollisionPotential = false;
 boolean showConnectionBetweenAgentAndBuilding = false;
 boolean showRemaninginAgentAndBuilding = false;
 boolean animatedGlyph = false;
-boolean devMode = false;
-UDPReceiver udpR;
 
+// change this to true, when testing locally
+boolean devMode = false;
+
+UDPReceiver udpR;
 void settings() {
   fullScreen(P3D, SPAN);
 }

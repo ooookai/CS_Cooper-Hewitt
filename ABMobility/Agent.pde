@@ -164,7 +164,7 @@ public class Agent {
       path = newPath;
       pathIndex = path.size() - 2; // what happens if there are only two nodes?
       toNode = path.get(pathIndex);
-      if(workdId==1){ // congestion only showing in bad world
+      if(worldId==1 && mobilityType.equals("car")){ // congestion only showing in bad world
         edge = map.edgeManager.updateEdge(this, edge, srcNode, toNode);
       }
     }
@@ -382,8 +382,9 @@ public class Agent {
         srcNode = toNode;
         pathIndex -= 1;
         toNode = path.get(pathIndex);
-        if(worldId==1){
-          edge = map.updateEdge(this, edge, srcNode, toNode);
+        // change myEdge 
+        if(worldId==1 && mobilityType.equals("car")){
+          edge = map.edgeManager.updateEdge(this, edge, srcNode, toNode);
         }
       }
     } else {

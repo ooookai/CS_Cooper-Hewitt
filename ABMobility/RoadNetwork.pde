@@ -34,7 +34,6 @@ public class RoadNetwork {
 
       JSONObject props = JSONlines.getJSONObject(i).getJSONObject("properties");
       boolean oneWay = props.isNull("oneway") ? false : props.getBoolean("oneway");
-
       JSONArray points = JSONlines.getJSONObject(i).getJSONObject("geometry").getJSONArray("coordinates");
 
       for (int j = 0; j<points.size(); j++) {
@@ -118,18 +117,16 @@ public class RoadNetwork {
   }
 
   public NetworkEdge updateEdge(
-      Agent agent, 
-      NetworkEdge edge, 
-      Node srcNode, 
-      Node toNode) { 
-
-     return edgeManager.updateEdge(agent, edge, srcNode, toNode); 
-
+    Agent agent, 
+    NetworkEdge edge, 
+    Node srcNode, 
+    Node toNode) { 
+      return edgeManager.updateEdge(agent, edge, srcNode, toNode); 
   }
 
   public void drawEdges(PGraphics p) {
     p.pushStyle();
-      edgeManager.draw(p);
+    edgeManager.draw(p);
     p.popStyle();
   }
   
